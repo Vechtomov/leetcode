@@ -24,7 +24,7 @@ The number of nodes in each linked list is in the range [1, 100].
 It is guaranteed that the list represents a number that does not have leading zeros.
 """
 
-from typing import Optional
+from typing import List, Optional
 from utils import are_equal
 
 # Definition for singly-linked list.
@@ -36,41 +36,51 @@ class ListNode:
 class Solution:
     def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
         stored = 0
-        degree = 1
-        res = []
+        res = ListNode()
+        prev_node = res
         while l1 != None or l2 != None:
             v1 = l1.val if l1 != None else 0
             v2 = l2.val if l2 != None else 0
             curr = v1 + v2 + stored
-            a, stored = curr % 10, curr // 10
-            res.append(a * degree)
-            degree *= 10
-            l1 = l1.next
-            l2 = l2.next
+            val, stored = curr % 10, curr // 10
+            prev_node.next = ListNode(val)
+            prev_node = prev_node.next
+            l1 = l1.next if l1 != None else None
+            l2 = l2.next if l2 != None else None
 
         if stored != 0:
-            res += stored * degree
+            prev_node.next = ListNode(stored)
         
-        return res
+        return res.next
 
 def test_solution():
     sol = Solution()
 
-    def transform(l):
-        pass
+    def to_nodes(l: List[int]):
+        res = ListNode()
+        prev = res
+        for v in l:
+            prev.next = ListNode(v)
+            prev = prev.next
+        return res.next
 
-    def test(l1, l2, expected: int):
-        n1 = ListNode()
-        for l in l1:
-            n1
-        are_equal(sol.addTwoNumbers(transform(l1), (l2)), expected)
+    def to_list(node: ListNode):
+        res = []
+        while node is not None:
+            res.append(node.val)
+            node = node.next
+        return res
 
-    test([0], [0], 0)
-    test([1], [2], 3)
-    test([9], [8], 17)
-    test([0, 1], [5], 15)
-    test([5], [0, 1], 15)
-    test([2,4,3], [5,6,4], 807)
+    def test(l1, l2, expected: List[int]):
+        are_equal(to_list(sol.addTwoNumbers(to_nodes(l1), to_nodes(l2))), expected)
+
+    test([0], [0], [0])
+    test([1], [2], [3])
+    test([9], [8], [7,1])
+    test([0, 1], [5], [5,1])
+    test([5], [0, 1], [5,1])
+    test([2,4,3], [5,6,4], [7,0,8])
+    test([9,9,9,9,9,9,9], [9,9,9,9], [8,9,9,9,0,0,0,1])
 
 
 if __name__ == '__main__':
