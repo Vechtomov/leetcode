@@ -65,8 +65,20 @@ class SolutionBottomUp:
         return dp[0][0]
 
 
+class Solution:
+    def minimumTotal(self, triangle: List[List[int]]) -> int:
+        rows = len(triangle)
+        acc = [float('inf')] * (rows + 1)
+        acc[1] = triangle[0][0]
+        for row in range(1, rows):
+            for col in range(row+1, 0, -1):
+                acc[col] = min(acc[col], acc[col-1]) + triangle[row][col-1]
+
+        return min(acc)
+
+
 def test_solution():
-    sol = SolutionBottomUp()
+    sol = Solution()
 
     def test(triangle: List[List[int]], expected: int):
         are_equal(sol.minimumTotal(triangle), expected)
