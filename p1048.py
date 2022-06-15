@@ -39,6 +39,7 @@ Constraints:
 words[i] only consists of lowercase English letters.
 """
 
+from collections import defaultdict
 from utils import are_equal
 from typing import List
 
@@ -79,10 +80,20 @@ class Solution:
         return max(helper(w) for w in words)
 
 
+class BetterSolution:
+    def longestStrChain(self, words: List[str]) -> int:
+        dp = defaultdict(int)
+
+        for w in sorted(words, key=len):
+            dp[w] = max([dp[w[:i]+w[i+1:]] for i in range(len(w))]) + 1
+
+        return max(dp.values())
+
+
 def test_solution():
 
     def test(words: List[str], expected: int):
-        sol = Solution()
+        sol = BetterSolution()
         are_equal(sol.longestStrChain(words), expected)
 
     test(["a"], 1)
