@@ -49,6 +49,30 @@ class Solution:
         return helper(root.left, root.right)
 
 
+class SolutionIterative:
+    def isSymmetric(self, root: Optional[TreeNode]) -> bool:
+        if root is None:
+            return True
+
+        st = [root.left, root.right]
+        res = True
+        while st and res:
+            l = st.pop(0)
+            r = st.pop(0)
+            if not l or not r:
+                res = l == r
+            elif l.val != r.val:
+                res = False
+            else:
+                st.append(l.left)
+                st.append(r.right)
+
+                st.append(l.right)
+                st.append(r.left)
+
+        return res
+
+
 def build_tree(tree: List[int]) -> Optional[TreeNode]:
     if len(tree) == 0:
         return None
@@ -68,7 +92,7 @@ def build_tree(tree: List[int]) -> Optional[TreeNode]:
 def test_solution():
 
     def test(root1: List[int], expected: bool):
-        sol = Solution()
+        sol = SolutionIterative()
         tree = sol.isSymmetric(build_tree(root1))
         are_equal(tree, expected)
 
