@@ -46,7 +46,7 @@ class Solution:
     def suggestedProducts(self, products: List[str], searchWord: str) -> List[List[str]]:
         products.sort()
 
-        def find_left(i, l, r):
+        def find_left(i, l, r, c):
             while l < r:
                 m = l + (r - l) // 2
                 if len(products[m]) <= i:
@@ -57,7 +57,7 @@ class Solution:
                     r = m
             return r
 
-        def find_right(i, l, r):
+        def find_right(i, l, r, c):
             while l < r:
                 m = l + (r - l) // 2
                 if products[m][i] <= c:
@@ -71,9 +71,8 @@ class Solution:
         for i, c in enumerate(searchWord):
             res.append([])
 
-            l = find_left(i, l, r)
-            r = find_right(i, l, r)
-            print(l, r)
+            l = find_left(i, l, r, c)
+            r = find_right(i, l, r, c)
 
             for j in range(l, l + min(r-l, 3)):
                 res[i].append(products[j])
